@@ -12,7 +12,7 @@ After installing the package [generate a Github token](https://github.com/settin
 by using:
 
 ```
-echo 'export GH_STATS_TOKEN=<your token> >> ~/.bash_profile'
+echo 'export GH_STATS_TOKEN=<your token>' >> ~/.bash_profile
 ```
 
 This token will be used by the cli to interface with the Github API.
