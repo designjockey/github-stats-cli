@@ -1,0 +1,39 @@
+{
+  "name": "github-stats-cli",
+  "version": "1.0.0",
+  "description": "Github stats cli",
+  "keywords": [
+    "github",
+    "stats",
+    "cli",
+    "pullrequest"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --notify --watchAll",
+    "test:coverage": "jest --config jest.conf.json --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/designjockey/github-stats-cli"
+  },
+  "author": "Ritesh Manchanda <me@ritesh.it>",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.3.0",
+    "commander": "^2.15.1",
+    "easy-table": "^1.1.1",
+    "graphql-client": "^2.0.1",
+    "moment": "^2.22.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "jest": "^23.0.1"
+  }
+}
