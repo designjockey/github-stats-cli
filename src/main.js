@@ -9,33 +9,53 @@ const getSearchQueryString = params => {
   return {
     ...params,
     query: `repo:${org}/${repo} type:pr is:${state} created:>=${fromDate} merged:<=${toDate}${
-      author ? ` author:${author}` : ''
-    }`,
+      author ? ` author:${author}` : ''}`
   };
 };
 
-module.exports = queryParams => {
-  const params = getSearchQueryString(queryParams);
-
-  console.log('PARAMS', params);
-  client
+const getData = (params) => {
+  // console.log(params);
+  return client
     .query(prSearchQuery, params, (req, res) => {
       if (res.status === 401) {
         throw new Error('Not authorized');
       }
-    })
-    .then(body => {
-      console.log(body);
-      const mappedData = getMappedPrData(body);
-      // const { author: queriedAuthor } = queryParams;
+    });
+}
 
-      // if (queriedAuthor) {
-      //   printTable(filterByAuthor(mappedData, queriedAuthor));
-      // } else {
-      printTable(mappedData);
-      // }
-    })
+const request = queryParams => {
+  const params = getSearchQueryString(queryParams);
+  // console.log('request');
+  // console.log('PARAMS', params);
+  // client
+  //   .query(prSearchQuery, params, (req, res) => {
+  //     if (res.status === 401) {
+  //       throw new Error('Not authorized');
+  //     }
+  //   })
+  getData(params).then(body => {
+    const mappedData = getMappedPrData(body);
+    // console.log(mappedData);
+    const { pageInfo } = body.data.search;
+    // const { author: queriedAuthor } = queryParams;
+
+    // if (queriedAuthor) {
+    //   printTable(filterByAuthor(mappedData, queriedAuthor));
+    // } else {
+    // console.log(mappedData[0].pageInfo.hasNextPage);
+
+    if (pageInfo.hasNextPage) {
+      // console.log('PAGINATE', pageInfo.endCursor);
+      request({ ...queryParams, after: pageInfo.endCursor });
+    }
+
+    printTable(mappedData);
+
+    // }
+  })
     .catch(err => {
       console.log(err.message);
     });
 };
+
+module.exports = request;
