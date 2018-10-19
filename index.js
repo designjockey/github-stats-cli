@@ -3,12 +3,14 @@
 const program = require('commander');
 const colors = require('colors');
 const app = require('./package.json');
-const { normalizeStates } = require('./src/utils');
+const { normalizeStates, getFromDate, getToDate } = require('./src/utils');
 const getStats = require('./src/main');
 
 const defaults = {
   num: 10,
-  states: 'OPEN',
+  state: 'merged',
+  fromDate: getFromDate(),
+  toDate: getToDate(),
 };
 
 colors.setTheme({
@@ -47,12 +49,9 @@ program
   .option('-r, --repo <repo>', 'required github repo name')
   .option('-u, --user <user>', 'optional author name', undefined)
   .option('-n, --num <num>', 'optional number of pull requests to return', defaults.num)
-  .option(
-    '-s, --states <states>',
-    'comma separated MERGED|CLOSED|OPEN',
-    defaults.states,
-    normalizeStates
-  )
+  .option('-s, --state <state>', 'merged|closed|open', defaults.state)
+  .option('-f, --from <from>', 'YYYY-MM-DD date, e.g. 2018-12-21', defaults.fromDate)
+  .option('-t, --to <to>', 'YYYY-MM-DD date, e.g. 2018-12-25', defaults.toDate)
   .parse(process.argv);
 
 if (!process.argv.slice(2).length) {
@@ -69,7 +68,10 @@ const queryParams = {
   repo: program.repo,
   author: program.user,
   num: Number(program.num),
-  states: normalizeStates(program.states),
+  state: program.state,
+  fromDate: program.from,
+  toDate: program.to,
 };
 
 getStats(queryParams);
+// $after: String, $fromDate: String!, $toDate: String!, $author String

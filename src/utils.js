@@ -3,7 +3,14 @@ const moment = require('moment');
 
 const getRelativeDate = date => (date ? moment(date).fromNow() : '-');
 
-const getDaysOpen = (fromDate, toDate) => moment(toDate).diff(fromDate, 'days');
+const getHoursOpen = (fromDate, toDate) => moment(toDate).diff(fromDate, 'hours', true);
+
+const getFromDate = () =>
+  moment()
+    .subtract(7, 'd')
+    .format('YYYY-MM-DD');
+
+const getToDate = () => moment().format('YYYY-MM-DD');
 
 const printTable = tableData => {
   console.log(Table.print(tableData));
@@ -15,7 +22,9 @@ const normalizeStates = value => {
 
 module.exports = {
   getRelativeDate,
-  getDaysOpen,
+  getHoursOpen,
+  getFromDate,
+  getToDate,
   normalizeStates,
   printTable,
 };

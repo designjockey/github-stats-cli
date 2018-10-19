@@ -1,26 +1,27 @@
-const { getRelativeDate, getDaysOpen } = require('./utils');
+const { getRelativeDate, getHoursOpen } = require('./utils');
 
-const getMappedPrData = ({
-  data: { repository: { pullRequests: { edges = [] } = {} } = {} } = {},
-} = {}) =>
-  edges.map(({ node }) => {
+const getMappedPrData = ({ data: { search: { pageInfo, nodes = [] } } = {} } = {}) =>
+  nodes.map(node => {
     const {
       merged,
       author: { login },
       createdAt,
       lastEditedAt,
       mergedAt,
-      resourcePath,
+      permalink,
     } = node;
 
-    return Object.assign({}, node, {
+    return {
+      merged,
       author: login,
       createdAt: getRelativeDate(createdAt),
       lastEditedAt: getRelativeDate(lastEditedAt),
       mergedAt: getRelativeDate(mergedAt),
-      resourcePath: `https://github.com${resourcePath}`,
-      daysOpen: !merged ? getDaysOpen(createdAt, Date.now()) : getDaysOpen(createdAt, mergedAt),
-    });
+      permalink,
+      hoursOpen: !merged
+        ? getHoursOpen(createdAt, Date.now()).toFixed(2)
+        : getHoursOpen(createdAt, mergedAt).toFixed(2),
+    };
   });
 
 const filterByAuthor = (data, queriedAuthor) =>
