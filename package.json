@@ -25,6 +25,7 @@
     "commander": "^2.15.1",
     "easy-table": "^1.1.1",
     "graphql-client": "^2.0.1",
+    "json2csv": "^4.2.1",
     "moment": "^2.22.1"
   },
   "bin": {
