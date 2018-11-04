@@ -24,10 +24,6 @@ const getMappedPrData = ({ data: { search: { pageInfo, nodes = [] } } = {} } = {
     };
   });
 
-const filterByAuthor = (data, queriedAuthor) =>
-  data.filter(({ author }) => author === queriedAuthor);
-
 module.exports = {
-  filterByAuthor,
   getMappedPrData,
 };

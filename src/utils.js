@@ -16,15 +16,10 @@ const printTable = tableData => {
   console.log(Table.print(tableData));
 };
 
-const normalizeStates = value => {
-  return value.replace(/ /g, '').split(',');
-};
-
 module.exports = {
   getRelativeDate,
   getHoursOpen,
   getFromDate,
   getToDate,
-  normalizeStates,
   printTable,
 };

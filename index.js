@@ -3,7 +3,7 @@
 const program = require('commander');
 const colors = require('colors');
 const app = require('./package.json');
-const { normalizeStates, getFromDate, getToDate } = require('./src/utils');
+const { getFromDate, getToDate } = require('./src/utils');
 const getStats = require('./src/main');
 
 const defaults = {
@@ -27,17 +27,17 @@ program.on('--help', () => {
     \n
   Examples:
     \n
-    Minimal usage - get last 10 PRs from facebook/react that are currently open:
+    Minimal usage - get PRs from facebook/react repo merged in last 7 days, paginate 10 at a time and save to ./prdata.csv:
     \n
       $ ${app.name} -o facebook -r react
     \n
-    Get last 20 PRs that are currently merged, closed or open:
+    Get PRs from facebook/react repo merged in last 7 days, paginate 20 at a time and save to ./prdata.csv:
     \n
-      $ ${app.name} -o facebook -r react -n 20 -s MERGED,CLOSED,OPEN
+      $ ${app.name} -o facebook -r react -n 20
     \n
-    Get last 20 closed PRs and return only the ones that match user name bvaughn:
+    Get PRs from facebook/react repo created on or after 2018-07-01 merged on or before 2018-09-30, paginate 20 at a time and save to ./prdata.csv:
     \n
-      $ ${app.name} -o facebook -r react -n 20 -s MERGED -u bvaughn
+      $ ${app.name} -o facebook -r react -n 20 -u bvaughn -f 2018-07-01 -t 2018-09-30
     \n
   `)
   );
@@ -48,8 +48,7 @@ program
   .option('-o, --org <org>', 'required github repo org name')
   .option('-r, --repo <repo>', 'required github repo name')
   .option('-u, --user <user>', 'optional author name', undefined)
-  .option('-n, --num <num>', 'optional number of pull requests to return', defaults.num)
-  .option('-s, --state <state>', 'merged|closed|open', defaults.state)
+  .option('-n, --num <num>', 'optional number of pull requests to return per page', defaults.num)
   .option('-f, --from <from>', 'YYYY-MM-DD date, e.g. 2018-12-21', defaults.fromDate)
   .option('-t, --to <to>', 'YYYY-MM-DD date, e.g. 2018-12-25', defaults.toDate)
   .parse(process.argv);
@@ -68,10 +67,9 @@ const queryParams = {
   repo: program.repo,
   author: program.user,
   num: Number(program.num),
-  state: program.state,
+  state: defaults.state,
   fromDate: program.from,
   toDate: program.to,
 };
 
 getStats(queryParams);
-// $after: String, $fromDate: String!, $toDate: String!, $author String

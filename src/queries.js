@@ -1,27 +1,4 @@
 const pullRequestsQuery = `
-  query repo($org: String!, $repo: String!, $num: Int!, $states: [PullRequestState!]) {
-    repository(owner: $org, name: $repo) {
-      pullRequests(last: $num, states: $states) {
-        edges {
-          node {
-            author {
-              login
-            },
-            title,
-            createdAt,
-            lastEditedAt,
-            mergedAt,
-            merged,
-            mergeable,
-            resourcePath,
-          }
-        }
-      }
-    }
-  }
-`;
-
-const prSearchQuery = `
 query searchMergedPrsQuery($after: String, $num: Int!, $query: String!) {
     search (first: $num, type:ISSUE, after: $after, query: $query) {
       pageInfo {
@@ -43,11 +20,6 @@ query searchMergedPrsQuery($after: String, $num: Int!, $query: String!) {
           additions
           deletions
           changedFiles
-          labels(first:5) {
-            nodes {
-              name
-            }
-          }
           commits {
             totalCount
           }
@@ -65,5 +37,4 @@ query searchMergedPrsQuery($after: String, $num: Int!, $query: String!) {
 
 module.exports = {
   pullRequestsQuery,
-  prSearchQuery,
 };
