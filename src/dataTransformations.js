@@ -1,6 +1,6 @@
 const { getRelativeDate, getHoursOpen } = require('./utils');
 
-const getMappedPrData = ({ data: { search: { pageInfo, nodes = [] } } = {} } = {}) =>
+const getMappedPrData = ({ data: { search: { pageInfo, nodes = [] } = {} } = {} } = {}) =>
   nodes.map(node => {
     const {
       merged,
