@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 const pullRequestsQuery = `
 query searchMergedPrsQuery($after: String, $num: Int!, $query: String!) {
     search (first: $num, type:ISSUE, after: $after, query: $query) {
