@@ -1,11 +1,18 @@
 const utils = require('../../src/utils');
 const Table = require('easy-table');
+const fs = require('fs');
+
+jest.mock('fs', () => ({
+  appendFile: jest.fn(),
+}));
 
 describe('src/utils', () => {
+  beforeEach(() => {
+    window.Date.now = jest.fn(() => '2018-05-30T23:23:53Z');
+  });
+
   describe('#getRelativeDate', () => {
     test('returns number of days passed', () => {
-      window.Date.now = jest.fn(() => '2018-05-30T23:23:53Z');
-
       expect(utils.getRelativeDate('2018-05-20T23:23:53Z')).toEqual('10 days ago');
     });
 
@@ -14,9 +21,11 @@ describe('src/utils', () => {
     });
   });
 
-  describe('#getDaysOpen', () => {
-    test('returns number of days passed between 2 dates', () => {
-      expect(utils.getDaysOpen('2018-05-20T23:23:53Z', '2018-05-25T23:40:09Z')).toEqual(5);
+  describe('#getHoursOpen', () => {
+    test('returns number of hours passed between 2 dates', () => {
+      expect(utils.getHoursOpen('2018-05-20T23:23:53Z', '2018-05-25T23:40:09Z')).toEqual(
+        120.27111111111111
+      );
     });
   });
 
@@ -39,21 +48,54 @@ describe('src/utils', () => {
     });
   });
 
-  describe('#normalizeStates', () => {
-    test('returns single value', () => {
-      expect(utils.normalizeStates('HELLO')).toEqual(['HELLO']);
+  describe('#getFromDate', () => {
+    test('returns YYYY-MM-DD format of date 7 days ago', () => {
+      expect(utils.getFromDate()).toEqual('2018-05-23');
+    });
+  });
+
+  describe('#getToDate', () => {
+    test('returns YYYY-MM-DD format of present day', () => {
+      expect(utils.getToDate()).toEqual('2018-05-30');
+    });
+  });
+
+  describe('#constructSearchQueryString', () => {
+    const params = {
+      org: 'facebook',
+      repo: 'react',
+      state: 'merged',
+      fromDate: '2018-01-01',
+      toDate: '2018-01-02',
+      foo: 'bar',
+    };
+
+    test('returns query without author', () => {
+      expect(utils.constructSearchQueryString(params)).toMatchObject({
+        ...params,
+        query: 'repo:facebook/react type:pr is:merged created:>=2018-01-01 merged:<=2018-01-02',
+      });
     });
 
-    test('returns array from comma separated string and removes spaces', () => {
-      expect(utils.normalizeStates('HELLO, WORLD')).toEqual(['HELLO', 'WORLD']);
-    });
+    test('returns query with author', () => {
+      const paramsWithAuthor = { ...params, author: 'authorName' };
 
-    test('returns array from comma separated string', () => {
-      expect(utils.normalizeStates('HELLO,WORLD')).toEqual(['HELLO', 'WORLD']);
+      expect(utils.constructSearchQueryString({ ...paramsWithAuthor })).toMatchObject({
+        ...paramsWithAuthor,
+        query:
+          'repo:facebook/react type:pr is:merged created:>=2018-01-01 merged:<=2018-01-02 author:authorName',
+      });
     });
+  });
 
-    test('returns array from empty string', () => {
-      expect(utils.normalizeStates('')).toEqual(['']);
+  describe('#appendToFile', () => {
+    test('calls appendFile', () => {
+      const fileContent = 'fileContentText';
+      const fileName = './prdata.csv';
+
+      utils.appendToFile(fileContent, fileName);
+
+      expect(fs.appendFile).toHaveBeenCalledWith(fileName, fileContent, expect.any(Function));
     });
   });
 });
