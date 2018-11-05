@@ -1,5 +1,10 @@
 const utils = require('../../src/utils');
 const Table = require('easy-table');
+const fs = require('fs');
+
+jest.mock('fs', () => ({
+  appendFile: jest.fn(),
+}));
 
 describe('src/utils', () => {
   beforeEach(() => {
@@ -52,6 +57,45 @@ describe('src/utils', () => {
   describe('#getToDate', () => {
     test('returns YYYY-MM-DD format of present day', () => {
       expect(utils.getToDate()).toEqual('2018-05-30');
+    });
+  });
+
+  describe('#constructSearchQueryString', () => {
+    const params = {
+      org: 'facebook',
+      repo: 'react',
+      state: 'merged',
+      fromDate: '2018-01-01',
+      toDate: '2018-01-02',
+      foo: 'bar',
+    };
+
+    test('returns query without author', () => {
+      expect(utils.constructSearchQueryString(params)).toMatchObject({
+        ...params,
+        query: 'repo:facebook/react type:pr is:merged created:>=2018-01-01 merged:<=2018-01-02',
+      });
+    });
+
+    test('returns query with author', () => {
+      const paramsWithAuthor = { ...params, author: 'authorName' };
+
+      expect(utils.constructSearchQueryString({ ...paramsWithAuthor })).toMatchObject({
+        ...paramsWithAuthor,
+        query:
+          'repo:facebook/react type:pr is:merged created:>=2018-01-01 merged:<=2018-01-02 author:authorName',
+      });
+    });
+  });
+
+  describe('#appendToFile', () => {
+    test('calls appendFile', () => {
+      const fileContent = 'fileContentText';
+      const fileName = './prdata.csv';
+
+      utils.appendToFile(fileContent, fileName);
+
+      expect(fs.appendFile).toHaveBeenCalledWith(fileName, fileContent, expect.any(Function));
     });
   });
 });
