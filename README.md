@@ -18,8 +18,9 @@ echo 'export GH_STATS_TOKEN=<your token>' >> ~/.bash_profile
 This token will be used by the cli to interface with the Github API.
 
 ## Usage
+
 ```
-  Usage: github-stats-cli [options]
+  Usage: ghs [options]
 
   Options:
     -v, --version          output the version number
@@ -31,20 +32,20 @@ This token will be used by the cli to interface with the Github API.
     -h, --help             output usage information
 
   Environment variables:
-    
+
     GH_STATS_TOKEN  set export GH_STATS_TOKEN=<your generated github token>
-    
+
   Examples:
-    
+
     Minimal usage - get last 10 PRs from facebook/react that are currently open:
-    
-      $ github-stats-cli -o facebook -r react
-    
+
+      $ ghs -o facebook -r react
+
     Get last 20 PRs that are currently merged, closed or open:
-    
-      $ github-stats-cli -o facebook -r react -n 20 -s MERGED,CLOSED,OPEN
-    
+
+      $ ghs -o facebook -r react -n 20 -s MERGED,CLOSED,OPEN
+
     Get last 20 closed PRs and return only the ones that match user name bvaughn:
-    
-      $ github-stats-cli -o facebook -r react -n 20 -s MERGED -u bvaughn
+
+      $ ghs -o facebook -r react -n 20 -s MERGED -u bvaughn
 ```
