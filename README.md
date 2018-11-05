@@ -23,13 +23,14 @@ This token will be used by the cli to interface with the Github API.
   Usage: ghs [options]
 
   Options:
-    -v, --version          output the version number
-    -o, --org <org>        required github repo org name
-    -r, --repo <repo>      required github repo name
-    -u, --user <user>      optional author name
-    -n, --num <num>        optional number of pull requests to return (default: 10)
-    -s, --states <states>  comma separated MERGED|CLOSED|OPEN (default: OPEN)
-    -h, --help             output usage information
+    -v, --version      output the version number
+    -o, --org <org>    required github repo org name
+    -r, --repo <repo>  required github repo name
+    -u, --user <user>  optional author name
+    -n, --num <num>    optional number of pull requests to return per page (default: 10)
+    -f, --from <from>  YYYY-MM-DD date, e.g. 2018-12-21 (default: "2018-10-29")
+    -t, --to <to>      YYYY-MM-DD date, e.g. 2018-12-25 (default: "2018-11-05")
+    -h, --help         output usage information
 
   Environment variables:
 
