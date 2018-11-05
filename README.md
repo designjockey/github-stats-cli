@@ -37,15 +37,15 @@ This token will be used by the cli to interface with the Github API.
 
   Examples:
 
-    Minimal usage - get last 10 PRs from facebook/react that are currently open:
+    Minimal usage - get PRs from facebook/react repo merged in last 7 days, paginate 10 at a time and save to ./prdata.csv:
 
       $ ghs -o facebook -r react
 
-    Get last 20 PRs that are currently merged, closed or open:
+    Get PRs from facebook/react repo merged in last 7 days, paginate 20 at a time and save to ./prdata.csv:
 
-      $ ghs -o facebook -r react -n 20 -s MERGED,CLOSED,OPEN
+      $ ghs -o facebook -r react -n 20
 
-    Get last 20 closed PRs and return only the ones that match user name bvaughn:
+    Get PRs from facebook/react repo created on or after 2018-07-01 merged on or before 2018-09-30, paginate 20 at a time and save to ./prdata.csv:
 
-      $ ghs -o facebook -r react -n 20 -s MERGED -u bvaughn
+      $ ghs -o facebook -r react -n 20 -u bvaughn -f 2018-07-01 -t 2018-09-30
 ```
