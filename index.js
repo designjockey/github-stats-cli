@@ -6,6 +6,7 @@ const app = require('./package.json');
 const { getFromDate, getToDate } = require('./src/utils');
 const getStats = require('./src/main');
 
+const [cmdString] = Object.keys(app.bin);
 const defaults = {
   num: 10,
   state: 'merged',
@@ -29,15 +30,15 @@ program.on('--help', () => {
     \n
     Minimal usage - get PRs from facebook/react repo merged in last 7 days, paginate 10 at a time and save to ./prdata.csv:
     \n
-      $ ${app.name} -o facebook -r react
+      $ ${cmdString} -o facebook -r react
     \n
     Get PRs from facebook/react repo merged in last 7 days, paginate 20 at a time and save to ./prdata.csv:
     \n
-      $ ${app.name} -o facebook -r react -n 20
+      $ ${cmdString} -o facebook -r react -n 20
     \n
     Get PRs from facebook/react repo created on or after 2018-07-01 merged on or before 2018-09-30, paginate 20 at a time and save to ./prdata.csv:
     \n
-      $ ${app.name} -o facebook -r react -n 20 -u bvaughn -f 2018-07-01 -t 2018-09-30
+      $ ${cmdString} -o facebook -r react -n 20 -u bvaughn -f 2018-07-01 -t 2018-09-30
     \n
   `)
   );
