@@ -6,6 +6,8 @@ describe('#getMappedPrData', () => {
   });
 
   test('returns transformed data to display in table in console', () => {
+    window.Date.now = jest.fn(() => '2018-10-28T23:23:53Z');
+
     expect(
       getMappedPrData({
         data: {
