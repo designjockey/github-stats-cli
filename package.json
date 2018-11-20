@@ -11,7 +11,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --notify --watchAll",
+    "test:watch": "jest --watchAll",
     "test:coverage": "jest --config jest.conf.json --coverage"
   },
   "repository": {
