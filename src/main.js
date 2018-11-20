@@ -42,7 +42,7 @@ const saveCsv = (data, options) => {
 const request = queryParams => {
   const searchQueryString = constructSearchQueryString(queryParams);
 
-  getData(searchQueryString)
+  return getData(searchQueryString)
     .then(body => {
       const mappedData = getMappedPrData(body);
       const { hasPreviousPage, hasNextPage, endCursor } = body.data.search.pageInfo;
