@@ -11,10 +11,17 @@ jest.mock('../../src/utils', () => ({
 }));
 
 describe('src/main', () => {
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('request', () => {
     describe('when only 1 page of results', () => {
-      test('saves results returned', async () => {
-        console.log = jest.fn();
+      beforeEach(() => {
         client.query = jest.fn(() =>
           Promise.resolve({
             data: {
@@ -47,7 +54,9 @@ describe('src/main', () => {
             },
           })
         );
+      });
 
+      test('saves results returned', async () => {
         await request();
 
         expect(printTable).toHaveBeenCalledWith([
@@ -63,6 +72,44 @@ describe('src/main', () => {
         ]);
         expect(console.log).toHaveBeenCalledWith('File saved to ./prdata.csv');
       });
+
+      test('makes request to API 1 time', async () => {
+        await request();
+
+        expect(client.query.mock.calls.length).toBe(1);
+      });
+    });
+
+    describe('when results are paginated', () => {
+      beforeEach(() => {
+        client.query = jest.fn().mockReturnValueOnce(
+          Promise.resolve({
+            data: {
+              search: {
+                pageInfo: {
+                  hasNextPage: true,
+                  hasPreviousPage: true,
+                  endCursor: 'someEndCursor',
+                },
+              },
+            },
+          })
+        );
+      });
+
+      test('makes another request', async () => {
+        await request();
+
+        expect(client.query.mock.calls.length).toBe(2);
+      });
+    });
+
+    test('throws error when query fails', async () => {
+      client.query = jest.fn(() => Promise.reject(Error('error message')));
+
+      await request();
+
+      expect(console.log).toHaveBeenCalledWith('error message');
     });
   });
 });

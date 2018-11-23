@@ -17,7 +17,7 @@ const printTable = tableData => {
   console.log(Table.print(tableData));
 };
 
-const constructSearchQueryString = params => {
+const constructSearchQueryString = (params = {}) => {
   const { org, repo, state, fromDate, toDate, author } = params;
 
   return {
