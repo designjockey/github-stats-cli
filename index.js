@@ -52,6 +52,7 @@ program
   .option('-n, --num <num>', 'optional number of pull requests to return per page', defaults.num)
   .option('-f, --from <from>', 'YYYY-MM-DD date, e.g. 2018-12-21', defaults.fromDate)
   .option('-t, --to <to>', 'YYYY-MM-DD date, e.g. 2018-12-25', defaults.toDate)
+  .option('--reviews', 'get PR review data by author')
   .parse(process.argv);
 
 if (!process.argv.slice(2).length) {
@@ -71,6 +72,7 @@ const queryParams = {
   state: defaults.state,
   fromDate: program.from,
   toDate: program.to,
+  reviews: program.reviews,
 };
 
 getStats(queryParams);

@@ -1,11 +1,13 @@
 const client = require('./graphqlClient');
-const { getMappedPrData } = require('./dataTransformations');
+const { mapData } = require('./dataTransformations');
 const { appendToFile, constructSearchQueryString, printTable } = require('./utils');
-const { pullRequestsQuery } = require('./queries');
+const { pullRequestsQuery, reviewsQuery } = require('./queries');
 const json2csv = require('json2csv').parse;
 
 const getData = params => {
-  return client.query(pullRequestsQuery, params, (req, res) => {
+  const query = params.reviews ? reviewsQuery : pullRequestsQuery;
+
+  return client.query(query, params, (req, res) => {
     if (res.status === 401) {
       throw new Error('Not authorized');
     }
@@ -44,7 +46,7 @@ const request = queryParams => {
 
   return getData(searchQueryString)
     .then(body => {
-      const mappedData = getMappedPrData(body);
+      const mappedData = mapData(queryParams, body);
       const { hasPreviousPage, hasNextPage, endCursor } = body.data.search.pageInfo;
 
       saveCsv(body.data.search.nodes, { header: !hasPreviousPage });

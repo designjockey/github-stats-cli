@@ -1,5 +1,32 @@
 const { getRelativeDate, getHoursOpen } = require('./utils');
 
+const mapData = (queryParams, responseBody) => {
+  console.log(queryParams);
+  return queryParams.reviews ? getMappedReviewData(responseBody) : getMappedPrData(responseBody);
+};
+
+const getMappedReviewData = ({ data: { search: { pageInfo, nodes = [] } = {} } = {} } = {}) => {
+  const reviews = nodes.reduce((acc, node) => [...acc, ...node.reviews.edges], []);
+  const reviewCounts = reviews.reduce((reviewerData, { node: review }) => {
+    const {
+      author: { login: reviewer },
+      comments: { totalCount: totalComments },
+    } = review;
+
+    return {
+      ...reviewerData,
+      [reviewer]: {
+        totalReviews: reviewerData[reviewer] ? reviewerData[reviewer].totalReviews + 1 : 1,
+        totalComments: reviewerData[reviewer]
+          ? reviewerData[reviewer].totalComments + totalComments
+          : totalComments,
+      },
+    };
+  }, {});
+
+  console.log(reviewCounts);
+};
+
 const getMappedPrData = ({ data: { search: { pageInfo, nodes = [] } = {} } = {} } = {}) =>
   nodes.map(node => {
     const {
@@ -25,5 +52,5 @@ const getMappedPrData = ({ data: { search: { pageInfo, nodes = [] } = {} } = {} 
   });
 
 module.exports = {
-  getMappedPrData,
+  mapData,
 };
