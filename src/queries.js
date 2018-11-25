@@ -50,11 +50,12 @@ query searchMergedPrsQuery($after: String, $num: Int!, $query: String!) {
           reviews(first: 20) {
             edges {
               node {
+                createdAt
                 author {
                   login
                 },
                 comments {
-                  totalCount,
+                  totalCount
                 }
               }
             }

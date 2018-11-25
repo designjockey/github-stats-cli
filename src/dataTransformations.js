@@ -1,4 +1,5 @@
 const { getRelativeDate, getHoursOpen } = require('./utils');
+const moment = require('moment');
 
 const dataCollector = [];
 
@@ -12,28 +13,46 @@ const getMappedReviewData = ({ data: { search: { pageInfo, nodes = [] } = {} } =
 
   if (!hasNextPage) {
     const reviews = dataCollector.reduce((acc, node) => [...acc, ...node.reviews.edges], []);
-    const reviewCounts = reviews.reduce((reviewerData, { node: review }) => {
+    const reviewCountsByDate = reviews.reduce((reviewerData, { node: review }) => {
       const {
         author: { login: reviewer },
         comments: { totalCount: totalComments },
+        createdAt,
       } = review;
+      const reviewDate = moment(createdAt).format('YYYY-MM-DD');
+      const totalReviews =
+        reviewerData[reviewDate] && reviewerData[reviewDate][reviewer]
+          ? reviewerData[reviewDate][reviewer].totalReviews + 1
+          : 1;
+      const totalReviewComments =
+        reviewerData[reviewDate] && reviewerData[reviewDate][reviewer]
+          ? reviewerData[reviewDate][reviewer].totalReviewComments + totalComments
+          : totalComments;
 
       return {
         ...reviewerData,
-        [reviewer]: {
-          totalReviews: reviewerData[reviewer] ? reviewerData[reviewer].totalReviews + 1 : 1,
-          totalComments: reviewerData[reviewer]
-            ? reviewerData[reviewer].totalComments + totalComments
-            : totalComments,
+        [reviewDate]: {
+          ...reviewerData[reviewDate],
+          [reviewer]: {
+            totalReviews,
+            totalReviewComments,
+          },
         },
       };
     }, {});
 
-    return Object.keys(reviewCounts).map(author => ({
-      reviewer: author,
-      totalReviews: reviewCounts[author].totalReviews,
-      totalComments: reviewCounts[author].totalComments,
-    }));
+    return Object.keys(reviewCountsByDate).reduce((acc, date) => {
+      return [
+        ...acc,
+        ...Object.keys(reviewCountsByDate[date]).map(reviewer => {
+          return {
+            reviewDate: date,
+            reviewer,
+            ...reviewCountsByDate[date][reviewer],
+          };
+        }),
+      ];
+    }, []);
   }
 };
 
