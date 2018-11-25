@@ -64,7 +64,7 @@ if (!program.org || !program.repo) {
   process.exit(1);
 }
 
-const queryParams = {
+const cliOptions = {
   org: program.org,
   repo: program.repo,
   author: program.user,
@@ -75,4 +75,4 @@ const queryParams = {
   reviews: program.reviews,
 };
 
-getStats(queryParams);
+getStats(cliOptions);

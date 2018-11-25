@@ -1,30 +1,40 @@
 const { getRelativeDate, getHoursOpen } = require('./utils');
 
-const mapData = (queryParams, responseBody) => {
-  console.log(queryParams);
-  return queryParams.reviews ? getMappedReviewData(responseBody) : getMappedPrData(responseBody);
-};
+const dataCollector = [];
+
+const mapData = (cliOptions, responseBody) =>
+  cliOptions.reviews ? getMappedReviewData(responseBody) : getMappedPrData(responseBody);
 
 const getMappedReviewData = ({ data: { search: { pageInfo, nodes = [] } = {} } = {} } = {}) => {
-  const reviews = nodes.reduce((acc, node) => [...acc, ...node.reviews.edges], []);
-  const reviewCounts = reviews.reduce((reviewerData, { node: review }) => {
-    const {
-      author: { login: reviewer },
-      comments: { totalCount: totalComments },
-    } = review;
+  const { hasNextPage } = pageInfo;
 
-    return {
-      ...reviewerData,
-      [reviewer]: {
-        totalReviews: reviewerData[reviewer] ? reviewerData[reviewer].totalReviews + 1 : 1,
-        totalComments: reviewerData[reviewer]
-          ? reviewerData[reviewer].totalComments + totalComments
-          : totalComments,
-      },
-    };
-  }, {});
+  dataCollector.push(...nodes);
 
-  console.log(reviewCounts);
+  if (!hasNextPage) {
+    const reviews = dataCollector.reduce((acc, node) => [...acc, ...node.reviews.edges], []);
+    const reviewCounts = reviews.reduce((reviewerData, { node: review }) => {
+      const {
+        author: { login: reviewer },
+        comments: { totalCount: totalComments },
+      } = review;
+
+      return {
+        ...reviewerData,
+        [reviewer]: {
+          totalReviews: reviewerData[reviewer] ? reviewerData[reviewer].totalReviews + 1 : 1,
+          totalComments: reviewerData[reviewer]
+            ? reviewerData[reviewer].totalComments + totalComments
+            : totalComments,
+        },
+      };
+    }, {});
+
+    return Object.keys(reviewCounts).map(author => ({
+      reviewer: author,
+      totalReviews: reviewCounts[author].totalReviews,
+      totalComments: reviewCounts[author].totalComments,
+    }));
+  }
 };
 
 const getMappedPrData = ({ data: { search: { pageInfo, nodes = [] } = {} } = {} } = {}) =>
