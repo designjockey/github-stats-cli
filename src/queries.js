@@ -48,13 +48,11 @@ query searchMergedPrsQuery($after: String, $num: Int!, $query: String!) {
       nodes {
         ... on PullRequest {
           reviews(first: 20) {
-            totalCount
             edges {
               node {
                 author {
                   login
                 },
-                state,
                 comments {
                   totalCount,
                 }
