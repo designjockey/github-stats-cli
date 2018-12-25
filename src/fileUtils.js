@@ -38,7 +38,7 @@ const savePrData = (responseBody, options) => {
   try {
     const csv = json2csv(data, { fields, ...options });
 
-    appendToFile(csv);
+    appendToFile(options.header ? csv : `\n${csv}`);
   } catch (err) {
     console.error(err);
   }
