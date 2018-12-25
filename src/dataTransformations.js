@@ -3,7 +3,7 @@ const moment = require('moment');
 
 const dataCollector = [];
 
-const mapData = (cliOptions, responseBody) =>
+const mapData = (cliOptions = {}, responseBody) =>
   cliOptions.reviews ? getMappedReviewData(responseBody) : getMappedPrData(responseBody);
 
 const getMappedReviewData = ({ data: { search: { pageInfo, nodes = [] } = {} } = {} } = {}) => {

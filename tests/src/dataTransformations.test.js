@@ -1,33 +1,36 @@
-const { getMappedPrData } = require('../../src/dataTransformations');
+const { mapData } = require('../../src/dataTransformations');
 
-describe('#getMappedPrData', () => {
+describe('#mapData', () => {
   test('returns empty array when no data is returned', () => {
-    expect(getMappedPrData()).toEqual([]);
+    expect(mapData()).toEqual([]);
   });
 
   test('returns transformed data to display in table in console', () => {
     window.Date.now = jest.fn(() => '2018-10-28T23:23:53Z');
 
     expect(
-      getMappedPrData({
-        data: {
-          search: {
-            pageInfo: {},
-            nodes: [
-              {
-                merged: true,
-                author: {
-                  login: 'username',
+      mapData(
+        {},
+        {
+          data: {
+            search: {
+              pageInfo: {},
+              nodes: [
+                {
+                  merged: true,
+                  author: {
+                    login: 'username',
+                  },
+                  createdAt: '2018-05-28T23:23:53Z',
+                  lastEditedAt: '',
+                  mergedAt: '2018-05-30T23:23:53Z',
+                  permalink: 'http://somelink.com/to/pr',
                 },
-                createdAt: '2018-05-28T23:23:53Z',
-                lastEditedAt: '',
-                mergedAt: '2018-05-30T23:23:53Z',
-                permalink: 'http://somelink.com/to/pr',
-              },
-            ],
+              ],
+            },
           },
-        },
-      })
+        }
+      )
     ).toEqual([
       {
         author: 'username',

@@ -4,7 +4,7 @@ const { constructSearchQueryString, printTable } = require('./utils');
 const saveCsv = require('./fileUtils');
 const { pullRequestsQuery, reviewsQuery } = require('./queries');
 
-const getData = cliOptions => {
+const getData = (cliOptions = {}) => {
   const query = cliOptions.reviews ? reviewsQuery : pullRequestsQuery;
 
   return client.query(query, cliOptions, (req, res) => {
@@ -14,7 +14,7 @@ const getData = cliOptions => {
   });
 };
 
-const request = cliOptions => {
+const request = (cliOptions = {}) => {
   const searchQueryString = constructSearchQueryString(cliOptions);
 
   // TODO: clean up function
