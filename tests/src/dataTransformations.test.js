@@ -166,6 +166,16 @@ describe('#mapData', () => {
                   mergedAt: '2018-05-30T23:23:53Z',
                   permalink: 'http://somelink.com/to/pr',
                 },
+                {
+                  merged: false,
+                  author: {
+                    login: 'someUsername',
+                  },
+                  createdAt: '2018-05-28T23:23:53Z',
+                  lastEditedAt: '',
+                  mergedAt: '',
+                  permalink: 'http://somelink.com/to/other/pr',
+                },
               ],
             },
           },
@@ -180,6 +190,15 @@ describe('#mapData', () => {
         merged: true,
         mergedAt: '5 months ago',
         permalink: 'http://somelink.com/to/pr',
+      },
+      {
+        author: 'someUsername',
+        createdAt: '5 months ago',
+        hoursOpen: '3672.00',
+        lastEditedAt: '-',
+        merged: false,
+        mergedAt: '-',
+        permalink: 'http://somelink.com/to/other/pr',
       },
     ]);
   });
