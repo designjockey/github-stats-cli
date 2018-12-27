@@ -1,5 +1,6 @@
 const { getRelativeDate, getHoursOpen } = require('./utils');
 const moment = require('moment');
+// const saveCsv = require('./fileUtils');
 
 const dataCollector = [];
 
@@ -11,6 +12,7 @@ const getMappedReviewData = ({ data: { search: { pageInfo, nodes = [] } = {} } =
 
   dataCollector.push(...nodes);
 
+  // after all the pageinated data has been pulled into dataCollector, process
   if (!hasNextPage) {
     const reviews = dataCollector.reduce((acc, node) => [...acc, ...node.reviews.edges], []);
     const reviewCountsByDate = reviews.reduce((reviewerData, { node: review }) => {
