@@ -30,6 +30,7 @@ This token will be used by the cli to interface with the Github API.
     -n, --num <num>    optional number of pull requests to return per page (default: 10)
     -f, --from <from>  YYYY-MM-DD date, e.g. 2018-12-21 (default: "2018-10-29")
     -t, --to <to>      YYYY-MM-DD date, e.g. 2018-12-25 (default: "2018-11-05")
+    --reviews          add flag to aggregate review data by author
     -h, --help         output usage information
 
   Environment variables:
@@ -49,4 +50,8 @@ This token will be used by the cli to interface with the Github API.
     Get PRs from facebook/react repo created on or after 2018-07-01 merged on or before 2018-09-30, paginate 20 at a time and save to ./prdata.csv:
 
       $ ghs -o facebook -r react -n 20 -u bvaughn -f 2018-07-01 -t 2018-09-30
+
+    Get PRs data for number of PRs reviewed and comments added by author:
+
+      $ ghs -o facebook -r react -f 2018-07-01 -t 2018-09-30 --reviews
 ```
