@@ -1,4 +1,4 @@
-# github-stats-cli
+# github-stats-cli [![codecov](https://codecov.io/gh/designjockey/github-stats-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/designjockey/github-stats-cli)
 
 Github CLI to fetch stats
 
