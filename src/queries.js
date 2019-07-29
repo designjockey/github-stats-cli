@@ -36,6 +36,37 @@ query searchMergedPrsQuery($after: String, $num: Int!, $query: String!) {
   }
 `;
 
+const reviewsQuery = `
+query searchMergedPrsQuery($after: String, $num: Int!, $query: String!) {
+    search (first: $num, type:ISSUE, after: $after, query: $query) {
+      pageInfo {
+        hasPreviousPage,
+        hasNextPage,
+        startCursor,
+        endCursor
+      }
+      nodes {
+        ... on PullRequest {
+          reviews(first: 20) {
+            edges {
+              node {
+                createdAt
+                author {
+                  login
+                },
+                comments {
+                  totalCount
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 module.exports = {
   pullRequestsQuery,
+  reviewsQuery,
 };
